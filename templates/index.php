@@ -1,3 +1,11 @@
+<?php
+    date_default_timezone_set('Europe/Moscow');
+
+    $cur_date = date_create("now");
+    $next_mon = date_create("tomorrow");
+    $diff = date_diff($cur_date, $next_mon);
+    $rest_time = date_interval_format($diff, "%H:%I");
+?>
 <section class="promo">
     <h2 class="promo__title">Нужен стафф для катки?</h2>
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
@@ -27,9 +35,11 @@
                             <span class="lot__amount">Стартовая цена</span>
                             <span class="lot__cost"><?=numberFormat(htmlspecialchars($value['price']));?></span>
                         </div>
-                        <div class="lot__timer timer">
-                            12:23
+
+                        <div class="<?php print((date_interval_format($diff, "%H")==0) ? ("lot__timer timer--finishing") : ("lot__timer timer")) ?>")>
+                           <?=$rest_time?>
                         </div>
+
                     </div>
                 </div>
             </li>
