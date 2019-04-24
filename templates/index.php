@@ -1,10 +1,12 @@
 <?php
     date_default_timezone_set('Europe/Moscow');
 
-    $cur_date = date_create("now");
-    $next_mon = date_create("tomorrow");
-    $diff = date_diff($cur_date, $next_mon);
-    $rest_time = date_interval_format($diff, "%H:%I");
+    function time_left($date_from, $date_to)
+    {
+        $diff = date_diff($date_from, $date_to);
+        $rest_time = date_interval_format($diff, "%H:%I");
+        return $rest_time;
+    }
 ?>
 <section class="promo">
     <h2 class="promo__title">Нужен стафф для катки?</h2>
@@ -36,8 +38,8 @@
                             <span class="lot__cost"><?=numberFormat(htmlspecialchars($value['price']));?></span>
                         </div>
 
-                        <div class="<?php print((date_interval_format($diff, "%H")==0) ? ("lot__timer timer--finishing") : ("lot__timer timer")) ?>")>
-                           <?=$rest_time?>
+                        <div class="<?php print((date_interval_format(date_diff(date_create("now"), date_create("tomorrow")), "%H")==0) ? ("lot__timer timer--finishing") : ("lot__timer timer")) ?>")>
+                           <?=time_left(date_create("now"), date_create("tomorrow"))?>
                         </div>
 
                     </div>
