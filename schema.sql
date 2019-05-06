@@ -2,6 +2,7 @@ CREATE DATABASE yeticave
 DEFAULT CHARACTER SET utf8
 DEFAULT COLLATE utf8_general_ci;
 
+USE yeticave;
 
 CREATE TABLE categories (
 	id_category int (10) AUTO_INCREMENT,
