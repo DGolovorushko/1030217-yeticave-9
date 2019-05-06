@@ -46,6 +46,7 @@ FROM items
     LEFT JOIN bets
         ON items.id_item = bets.id_item
 WHERE items.id_winner IS NULL
+GROUP BY items.id_item
 ORDER BY items.start_date DESC;
 
 -- Получение лотов по id
