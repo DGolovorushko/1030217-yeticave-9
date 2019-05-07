@@ -7,7 +7,7 @@ USE yeticave;
 CREATE TABLE categories (
 	id_category int (10) AUTO_INCREMENT,
 	name varchar(20),
-	symbol_code varchar(3),
+	symbol_code varchar(20),
 	PRIMARY KEY (id_category)
 );
 

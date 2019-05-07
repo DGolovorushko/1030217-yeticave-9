@@ -5,9 +5,41 @@ include_once "helpers.php";
 $is_auth = rand(0, 1);
 
 $user_name = 'Dmitry'; // укажите здесь ваше имя
+$categories = [];
+$announcements = [];
+$con = mysqli_connect("localhost", "root", "", "yeticave");
+mysqli_set_charset($con, "utf8");
+if ($con){
+    // Получение списка категорий
+    $sql = "SELECT * FROM categories;";
+    $result = mysqli_query($con, $sql);
+    if ($result){
+        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        foreach ($rows as $row) {
+            array_push($categories, $row);
+        }
+    }
 
-$categories = ["Доски и лыжи", "Крепления", "Ботинки", "Одежда", "Инструменты", "Разное"];
+    // Получение списка лотов
+    $sql = "SELECT items.description AS name, items.price AS first_price, items.image AS url, categories.name AS category, MAX(bets.bet_sum) AS price
+            FROM items
+                     LEFT JOIN categories
+                               ON items.id_category = categories.id_category
+                     LEFT JOIN bets
+                               ON items.id_item = bets.id_item
+            WHERE items.id_winner IS NULL
+            GROUP BY items.id_item
+            ORDER BY items.start_date DESC;";
+    $result = mysqli_query($con, $sql);
+    if ($result){
+        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        foreach ($rows as $row) {
+            array_push($announcements, $row);
+        }
+    }
+}
 
+/*
 $announcements = [
     [
         'name' => '2014 Rossignol District Snowboard',
@@ -46,6 +78,7 @@ $announcements = [
         'url' => 'img/lot-6.jpg'
     ]
 ];
+*/
 
 $data_index = [
     'categories' => $categories,

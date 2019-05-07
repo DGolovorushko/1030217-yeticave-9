@@ -1,10 +1,10 @@
 
 -- Заполнение таблицы категорий
-INSERT INTO categories (name, symbol_code) VALUES ('Доски и лыжи',1);
-INSERT INTO categories (name, symbol_code) VALUES ('Ботинки',2);
-INSERT INTO categories (name, symbol_code) VALUES ('Одежда',3);
-INSERT INTO categories (name, symbol_code) VALUES ('Инструменты',4);
-INSERT INTO categories (name, symbol_code) VALUES ('Разное',5);
+INSERT INTO categories (name, symbol_code) VALUES ('Доски и лыжи', 'boards');
+INSERT INTO categories (name, symbol_code) VALUES ('Ботинки', 'boots');
+INSERT INTO categories (name, symbol_code) VALUES ('Одежда', 'clothing');
+INSERT INTO categories (name, symbol_code) VALUES ('Инструменты', 'tools');
+INSERT INTO categories (name, symbol_code) VALUES ('Разное', 'other');
 
 -- Заполнение таблицы пользователей
 INSERT INTO users (registration_date, name, email, password, avatar, contacts) VALUES ('2019-01-31 09:10:01', 'Иван', 'ivan2019@mail.ru', 'secret', NULL, '+79163332211');
@@ -36,7 +36,7 @@ VALUES ('2019-04-13 07:12:17', 1500.12, 2, 1);
 */
 
 -- Получение всех категорий
-SELECT * FROM 'categories';
+SELECT * FROM categories;
 
 -- Получение самых новых, открытых лотов
 SELECT items.description, items.price AS first_price, items.image, categories.name AS category, MAX(bets.bet_sum) AS last_price
