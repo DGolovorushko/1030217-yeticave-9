@@ -13,7 +13,7 @@ CREATE TABLE categories (
 
 CREATE TABLE users (
 	id_user int (10) AUTO_INCREMENT,
-	registration_date date,
+	registration_date datetime,
 	name varchar(20),
 	email varchar(70),
 	password varchar(30),
@@ -26,7 +26,7 @@ CREATE UNIQUE INDEX email ON users(email);
 
 CREATE TABLE items (
 	id_item int (10) AUTO_INCREMENT,
-	start_date date,
+	start_date datetime,
 	description text,
 	image VARCHAR(200),
 	price double(15, 2),
@@ -48,7 +48,7 @@ CREATE INDEX id_category ON items(id_category);
 
 CREATE TABLE bets (
 	id_bet int (10) AUTO_INCREMENT,
-	bet_date date,
+	bet_date datetime,
 	bet_sum double(15, 2),
 	id_user int (10),
 	id_item int (10),
