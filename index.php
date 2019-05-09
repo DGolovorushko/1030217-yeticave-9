@@ -3,7 +3,6 @@
 include_once "helpers.php";
 
 $is_auth = rand(0, 1);
-
 $user_name = 'Dmitry'; // укажите здесь ваше имя
 $categories = [];
 $announcements = [];
@@ -36,22 +35,6 @@ if ($con){
             $item['finish_date'] = $dateobj;
         }
     }
-}
-
-function numberFormat($number)
-{
-    $number = number_format(ceil($number), 0, " ", " ");
-    $number = (string)$number . " ₽";
-
-    return $number;
-}
-
-date_default_timezone_set('Europe/Moscow');
-function time_left($date_from, $date_to)
-{
-    $diff = date_diff($date_from, $date_to);
-    $rest_time = date_interval_format($diff, "%H:%I");
-    return $rest_time;
 }
 
 $data_index = [

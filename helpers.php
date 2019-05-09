@@ -143,4 +143,39 @@ function include_template($name, array $data = []) {
     return $result;
 }
 
+/**
+ * Приводит число к денежному формату, округляя его до целого и разделяя пробелами триады
+ * @param double/int $number Форматируемое число
+ * @return string Отформатированное число
+ */
+function numberFormat($number)
+{
+    $number = number_format(ceil($number), 0, " ", " ");
+    $number = (string)$number . " ₽";
 
+    return $number;
+}
+
+/**
+ * Выводит длину интервала между датами в формате "Часы: Минуты"
+ * @param DateTime object $date_from Дата начала интервала
+ * @param DateTime object $date_to Дата окончания интервала
+ * @return string Длина интервала
+ */
+date_default_timezone_set('Europe/Moscow');
+function time_left($date_from, $date_to)
+{
+    $diff = date_diff($date_from, $date_to);
+    $rest_time = date_interval_format($diff, "%H:%I");
+    return $rest_time;
+}
+
+/**
+ * Осуществляет переход на страницу 404
+ */
+function to404()
+{
+    $url404 = 'pages/404.html';
+    header('Location: '.$url404);
+    exit();
+}
