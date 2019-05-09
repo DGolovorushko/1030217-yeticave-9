@@ -50,9 +50,12 @@ GROUP BY items.id_item
 ORDER BY items.start_date DESC;
 
 -- Получение лотов по id
-SELECT items.*, categories.name AS category FROM items
+SELECT items.*, categories.name AS category, MAX(bets.bet_sum) AS last_price
+FROM items
     LEFT JOIN categories
-    ON items.id_category = categories.id_category
+        ON items.id_category = categories.id_category
+    LEFT JOIN bets
+        ON items.id_item = bets.id_item
 WHERE id_item = 2;
 
 -- Обновление названия лота по его id
@@ -62,3 +65,11 @@ UPDATE items SET description = 'Пушистая зимняя шапка' WHERE 
 SELECT bet_date, bet_sum FROM bets
 WHERE bets.id_item = 2
 ORDER BY bets.bet_date DESC;
+
+-- Получение самых свежих ставок для лота по его id + имя поставившего
+SELECT bet_date, bet_sum, users.name FROM bets
+    LEFT JOIN users
+            ON bets.id_user = users.id_user
+WHERE bets.id_item = 2
+ORDER BY bets.bet_date DESC;
+

@@ -18,7 +18,7 @@ if ($con){
     }
 
     // Получение списка лотов
-    $sql = "SELECT items.description AS name, items.price AS first_price, items.image AS url, categories.name AS category, MAX(bets.bet_sum) AS price
+    $sql = "SELECT items.id_item, items.title AS name, items.price AS first_price, items.image AS url, categories.name AS category, items.finish_date, MAX(bets.bet_sum) AS price
             FROM items
                      LEFT JOIN categories
                                ON items.id_category = categories.id_category
@@ -29,13 +29,18 @@ if ($con){
             ORDER BY items.start_date DESC;";
     $result = mysqli_query($con, $sql);
     if ($result){
-        $announcements = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $items = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        foreach ($items as &$item){
+            $format = "Y-m-d H:i:s";
+            $dateobj = DateTime::createFromFormat($format, $item['finish_date']);
+            $item['finish_date'] = $dateobj;
+        }
     }
 }
 
 $data_index = [
     'categories' => $categories,
-    'announcements' => $announcements
+    'items' => $items
 ];
 
 function numberFormat($number)
