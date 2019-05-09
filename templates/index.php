@@ -1,13 +1,3 @@
-<?php
-    date_default_timezone_set('Europe/Moscow');
-
-    function time_left($date_from, $date_to)
-    {
-        $diff = date_diff($date_from, $date_to);
-        $rest_time = date_interval_format($diff, "%H:%I");
-        return $rest_time;
-    }
-?>
 <section class="promo">
     <h2 class="promo__title">Нужен стафф для катки?</h2>
     <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>

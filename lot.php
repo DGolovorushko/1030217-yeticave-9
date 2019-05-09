@@ -42,6 +42,9 @@ if ($con){
         if($item['id_item']==NULL){
             to404();
         }
+        if($item['last_price']==NULL OR $item['last_price']==0){
+            $item['last_price'] = $item['price'];
+        }
         $format = "Y-m-d H:i:s";
         $dateobj = DateTime::createFromFormat($format, $item['finish_date']);
         $item['finish_date'] = $dateobj;
@@ -80,6 +83,14 @@ function numberFormat($number)
     $number = (string)$number . " ₽";
 
     return $number;
+}
+
+date_default_timezone_set('Europe/Moscow');
+function time_left($date_from, $date_to)
+{
+    $diff = date_diff($date_from, $date_to);
+    $rest_time = date_interval_format($diff, "%H:%I");
+    return $rest_time;
 }
 
 function to404()

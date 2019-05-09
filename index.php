@@ -38,11 +38,6 @@ if ($con){
     }
 }
 
-$data_index = [
-    'categories' => $categories,
-    'items' => $items
-];
-
 function numberFormat($number)
 {
     $number = number_format(ceil($number), 0, " ", " ");
@@ -50,6 +45,19 @@ function numberFormat($number)
 
     return $number;
 }
+
+date_default_timezone_set('Europe/Moscow');
+function time_left($date_from, $date_to)
+{
+    $diff = date_diff($date_from, $date_to);
+    $rest_time = date_interval_format($diff, "%H:%I");
+    return $rest_time;
+}
+
+$data_index = [
+    'categories' => $categories,
+    'items' => $items
+];
 
 $index = include_template("index.php", $data_index);
 
