@@ -3,7 +3,6 @@
 include_once "helpers.php";
 
 $is_auth = rand(0, 1);
-
 $user_name = 'Dmitry'; // укажите здесь ваше имя
 $categories = [];
 $announcements = [];
@@ -18,7 +17,7 @@ if ($con){
     }
 
     // Получение списка лотов
-    $sql = "SELECT items.description AS name, items.price AS first_price, items.image AS url, categories.name AS category, MAX(bets.bet_sum) AS price
+    $sql = "SELECT items.id_item, items.title AS name, items.price AS first_price, items.image AS url, categories.name AS category, items.finish_date, MAX(bets.bet_sum) AS price
             FROM items
                      LEFT JOIN categories
                                ON items.id_category = categories.id_category
@@ -29,22 +28,19 @@ if ($con){
             ORDER BY items.start_date DESC;";
     $result = mysqli_query($con, $sql);
     if ($result){
-        $announcements = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $items = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        foreach ($items as &$item){
+            $format = "Y-m-d H:i:s";
+            $dateobj = DateTime::createFromFormat($format, $item['finish_date']);
+            $item['finish_date'] = $dateobj;
+        }
     }
 }
 
 $data_index = [
     'categories' => $categories,
-    'announcements' => $announcements
+    'items' => $items
 ];
-
-function numberFormat($number)
-{
-    $number = number_format(ceil($number), 0, " ", " ");
-    $number = (string)$number . " ₽";
-
-    return $number;
-}
 
 $index = include_template("index.php", $data_index);
 
