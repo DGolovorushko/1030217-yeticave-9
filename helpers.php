@@ -179,3 +179,14 @@ function to404()
     header('Location: '.$url404);
     exit();
 }
+
+/**
+ * Осуществляет переход на страницу с лотом
+ * @param int $id_item ID лота, на страницу которого нужно перейти
+ */
+function toItem($id_item)
+{
+    $urlItem = 'lot.php?id_item='.$id_item;
+    header('Location: '.$urlItem);
+    exit();
+}

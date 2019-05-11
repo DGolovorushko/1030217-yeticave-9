@@ -6,13 +6,13 @@ $id_item = 0;
 
 if(isset($_GET['id_item']) && $_GET['id_item']!=0){
     $id_item = $_GET['id_item'];
+    settype($id_item, 'integer');
 }
 else{
     to404();
 }
 
 $is_auth = rand(0, 1);
-
 $user_name = 'Dmitry'; // укажите здесь ваше имя
 $categories = [];
 $bets = [];
@@ -77,31 +77,17 @@ $data_lot = [
     'bets' => $bets
 ];
 
-function numberFormat($number)
-{
-    $number = number_format(ceil($number), 0, " ", " ");
-    $number = (string)$number . " ₽";
+$lot = include_template("lot.php", $data_lot);
 
-    return $number;
-}
+$data_layout = [
+    'is_auth' => $is_auth,
+    'user_name' => $user_name,
+    'categories' => $categories,
+    'title' => $item['title'],
+    'tmplt_main' => $lot
+];
+$page = include_template("layout.php", $data_layout);
 
-date_default_timezone_set('Europe/Moscow');
-function time_left($date_from, $date_to)
-{
-    $diff = date_diff($date_from, $date_to);
-    $rest_time = date_interval_format($diff, "%H:%I");
-    return $rest_time;
-}
-
-function to404()
-{
-    $url404 = 'pages/404.html';
-    header('Location: '.$url404);
-    exit();
-}
-
-$index = include_template("lot.php", $data_lot);
-
-print($index);
+print($page);
 
 ?>
