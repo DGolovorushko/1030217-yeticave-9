@@ -35,7 +35,7 @@
         <div class="form__item form__item--file<?php if(!empty($errors['message'])){print ' form__item--invalid';}?>">
             <label>Изображение <sup>*</sup></label>
             <div class="form__input-file">
-                <input class="visually-hidden" type="file" id="lot-img" value="">
+                <input class="visually-hidden" type="file" id="lot-img" name="lot-img" value="">
                 <label for="lot-img">
                     Добавить
                 </label>

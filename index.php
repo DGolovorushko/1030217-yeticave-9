@@ -33,6 +33,9 @@ if ($con){
             $format = "Y-m-d H:i:s";
             $dateobj = DateTime::createFromFormat($format, $item['finish_date']);
             $item['finish_date'] = $dateobj;
+            if ($item['price']==0){
+                $item['price'] = $item['first_price'];
+            }
         }
     }
 }

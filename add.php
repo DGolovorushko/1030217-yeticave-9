@@ -16,24 +16,34 @@ $required_fields = ['lot-name', 'message', 'lot-rate', 'lot-step', 'lot-date'];
 $fields = [
     'lot-name' => '',
     'category' => 'Выберите категорию',
-    'message' => '',  //opisanie
-    'lot-rate' => '', //nachalnaya tsena
-    'lot-step' => '', //shag stavki
-    'lot-date' => '' //data zaversheniya torgov
+    'message' => '',
+    'lot-rate' => '',
+    'lot-step' => '',
+    'lot-date' => ''
 ];
 $errors = [];
-
-
-print_r($_FILES);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_FILES['lot-img'])) {
-        $file_name = $_FILES['lot-img']['name'];
-        $file_path = __DIR__ . '/uploads/';
-        $file_url = $file_path . $file_name;
 
-        move_uploaded_file($_FILES['lot-img']['tmp_name'], $file_path . $file_name);
+        $file_type = "";
+
+        if ($_FILES['lot-img']['type'] == "image/jpeg") {
+            $file_type = ".jpg";
+        } elseif ($_FILES['lot-img']['type'] == "image/png") {
+            $file_type = ".png";
+        } else {
+            $errors['lot-img'] = 'Выберите файл png или jpg';
+        }
+
+        if ($file_type != "") {
+            $file_name = uniqid();
+            $file_path = __DIR__ . '/uploads/';
+            $file_url = '/uploads/' . $file_name . $file_type;
+            move_uploaded_file($_FILES['lot-img']['tmp_name'], $file_path . $file_name . $file_type);
+        }
+
     } else {
         $errors['lot-img'] = 'Выберите файл';
     }
@@ -50,10 +60,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
 
             // категория
+            $id_category = 0;
             if (!empty($_POST['category'])) {
                 $fields['category'] = $_POST['category'];
                 if ($fields['category'] == 'Выберите категорию') {
                     $errors['category'] = 'Выберите категорию';
+                }
+                else{
+                    $sql = "SELECT * FROM categories WHERE name='".$fields['category']."';";
+                    $result = mysqli_query($con, $sql);
+                    if ($result){
+                        $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                        if (count($categories)) {
+                            $id_category = $categories[0]['id_category'];
+                        }
+                        else{
+                            $errors['category'] = 'Выберите категорию из списка';
+                        }
+                    }
+                    else{
+                        $errors['category'] = 'Выберите категорию из списка';
+                    }
                 }
             } else {
                 $errors['category'] = 'Выберите категорию';
@@ -103,6 +130,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if ($date == NULL){
                     $errors['lot-date'] = 'Неправильный формат даты';
                 }
+                else{
+                    $tomorrow = date_create("tomorrow");
+                    if($date < $tomorrow){
+                        $errors['lot-date'] = 'Дата не может быть меньше завтрашнего дня';
+                    }
+                }
             } else {
                 $errors['lot-date'] = 'Введите дату завершения торгов';
             }
@@ -111,12 +144,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // добавление лота
             if (!count($errors) && !empty($file_url)) {
+
+                print('Добавляем лот <br>');
+
                 $sql = "INSERT INTO items(start_date, description, image, price, finish_date, step, id_author, id_category, title)
-                                VALUES (".$fields['lot-date'].",".$fields['message'].",".$file_url.",".$fields['lot-rate'].",".$fields['lot-date'].",".$fields['lot-step'].",1,".id_category.",".$fields['lot-name'].")";
+                                VALUES (".$fields['lot-date'].",'".$fields['message']."','".$file_url."','".$fields['lot-rate']."','".$fields['lot-date']."','".$fields['lot-step']."',1,".$id_category.",'".$fields['lot-name']."')";
                 $result = mysqli_query($con, $sql);
                 if ($result){
-                    $result = mysqli_insert_id($result);
-                    toItem($result);
+
+                    $id_item = mysqli_insert_id($con);
+                    toItem($id_item);
+
+                }
+                else{
+                    unlink($file_path . $file_name);
                 }
             }
         }
