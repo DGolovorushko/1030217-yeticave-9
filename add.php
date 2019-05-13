@@ -145,8 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // добавление лота
             if (!count($errors) && !empty($file_url)) {
 
-                print('Добавляем лот <br>');
-
                 $sql = "INSERT INTO items(start_date, description, image, price, finish_date, step, id_author, id_category, title)
                                 VALUES (".$fields['lot-date'].",'".$fields['message']."','".$file_url."','".$fields['lot-rate']."','".$fields['lot-date']."','".$fields['lot-step']."',1,".$id_category.",'".$fields['lot-name']."')";
                 $result = mysqli_query($con, $sql);
