@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             . date('Y-m-d H:i:s')
                                             . "','" . mysqli_real_escape_string($fields['name'])
                                             . "','" . mysqli_real_escape_string($fields['email'])
-                                            . "','" . mysqli_real_escape_string($fields['password'])
+                                            . "','" . md5(mysqli_real_escape_string($fields['password']))
                                             . "','" . mysqli_real_escape_string($fields['message'])
                                             . "')";
                 $result = mysqli_query($con, $sql);
