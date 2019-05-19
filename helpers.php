@@ -190,3 +190,12 @@ function toItem($id_item)
     header('Location: '.$urlItem);
     exit();
 }
+
+/**
+ * Осуществляет переход на главную страницу
+ */
+function toMain()
+{
+    header('Location: '.'index.php');
+    exit();
+}
