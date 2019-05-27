@@ -1,9 +1,16 @@
 <?php
 
+require_once "login_check.php";
 include_once "helpers.php";
 
-$is_auth = rand(0, 1);
-$user_name = 'Dmitry'; // укажите здесь ваше имя
+$is_auth = 0;
+$user_name = '';
+
+if (isset($_SESSION["is_auth"])) {
+    $is_auth = $_SESSION["is_auth"];
+    $user_name = $_SESSION["user_name"];
+}
+
 $categories = [];
 $file_url = '';
 
@@ -54,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // наименование лота
             if (!empty($_POST['lot-name'])) {
-                $fields['lot-name'] = $_POST['lot-name'];
+                $fields['lot-name'] = mysqli_real_escape_string($con, $_POST['lot-name']);
             } else {
                 $errors['lot-name'] = 'Введите наименование лота';
             }
@@ -62,23 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // категория
             $id_category = 0;
             if (!empty($_POST['category'])) {
-                $fields['category'] = $_POST['category'];
+                $fields['category'] = mysqli_real_escape_string($con, $_POST['category']);
                 if ($fields['category'] == 'Выберите категорию') {
                     $errors['category'] = 'Выберите категорию';
-                }
-                else{
-                    $sql = "SELECT * FROM categories WHERE name='".$fields['category']."';";
+                } else {
+                    $sql = "SELECT * FROM categories WHERE name='".mysqli_real_escape_string($con, $fields['category'])."';";
                     $result = mysqli_query($con, $sql);
                     if ($result){
                         $categories = mysqli_fetch_all($result, MYSQLI_ASSOC);
                         if (count($categories)) {
                             $id_category = $categories[0]['id_category'];
-                        }
-                        else{
+                        } else {
                             $errors['category'] = 'Выберите категорию из списка';
                         }
-                    }
-                    else{
+                    } else {
                         $errors['category'] = 'Выберите категорию из списка';
                     }
                 }
@@ -88,18 +92,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // описание
             if (!empty($_POST['message'])) {
-                $fields['message'] = $_POST['message'];
+                $fields['message'] = mysqli_real_escape_string($con, $fields['message']);
             } else {
                 $errors['message'] = 'Напишите описание лота';
             }
 
             // начальная цена
             if (!empty($_POST['lot-rate'])) {
-                $fields['lot-rate'] = $_POST['lot-rate'];
+                $fields['lot-rate'] = mysqli_real_escape_string($con, $fields['lot-rate']);
                 if (filter_var($fields['lot-rate'], FILTER_VALIDATE_INT) == FALSE) {
                     $errors['lot-rate'] = 'Начальная цена должна быть числом';
-                }
-                else{
+                } else {
                     if ($fields['lot-rate'] == 0){
                         $errors['lot-rate'] = 'Начальная цена должна быть больше нуля';
                     }
@@ -110,11 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // шаг ставки
             if (!empty($_POST['lot-step'])) {
-                $fields['lot-step'] = $_POST['lot-step'];
+                $fields['lot-step'] = mysqli_real_escape_string($con, $fields['lot-step']);
                 if (filter_var($fields['lot-step'], FILTER_VALIDATE_INT) == FALSE) {
                     $errors['lot-step'] = 'Шаг ставки должен быть числом';
-                }
-                else{
+                } else {
                     if ($fields['lot-step'] == 0){
                         $errors['lot-step'] = 'Шаг ставки должен быть больше нуля';
                     }
@@ -125,12 +127,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // дата завершения торгов
             if (!empty($_POST['lot-date'])) {
-                $fields['lot-date'] = $_POST['lot-date'];
+                $fields['lot-date'] = mysqli_real_escape_string($con, $fields['lot-date']);
                 $date = date_create($fields['lot-date']);
                 if ($date == NULL){
                     $errors['lot-date'] = 'Неправильный формат даты';
-                }
-                else{
+                } else {
                     $tomorrow = date_create("tomorrow");
                     if($date < $tomorrow){
                         $errors['lot-date'] = 'Дата не может быть меньше завтрашнего дня';
@@ -153,8 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $id_item = mysqli_insert_id($con);
                     toItem($id_item);
 
-                }
-                else{
+                } else {
                     unlink($file_path . $file_name);
                 }
             }

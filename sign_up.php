@@ -1,10 +1,9 @@
 <?php
+
+require_once "login_check.php";
 include_once "helpers.php";
 
-$is_auth = rand(0, 1);
-$user_name = 'Dmitry'; // укажите здесь ваше имя
 $categories = [];
-$file_url = '';
 
 $con = mysqli_connect("localhost", "root", "", "yeticave");
 mysqli_set_charset($con, "utf8");
@@ -32,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
                     $errors['email'] = 'Неправильный формат e-mail';
                 } else {
-                    $sql = "SELECT id_user FROM users WHERE email='" . mysqli_real_escape_string($_POST['email']) . "'";
+                    $sql = "SELECT id_user FROM users WHERE email='" . mysqli_real_escape_string($con, $_POST['email']) . "'";
                     $result = mysqli_query($con, $sql);
                     if ($result) {
                         $fields['email'] = $_POST['email'];
@@ -72,14 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $sql = "INSERT INTO users(registration_date, name, email, password, contacts)
                                 VALUES ('"
                                             . date('Y-m-d H:i:s')
-                                            . "','" . mysqli_real_escape_string($fields['name'])
-                                            . "','" . mysqli_real_escape_string($fields['email'])
-                                            . "','" . mysqli_real_escape_string($fields['password'])
-                                            . "','" . mysqli_real_escape_string($fields['message'])
+                                            . "','" . mysqli_real_escape_string($con, $fields['name'])
+                                            . "','" . mysqli_real_escape_string($con, $fields['email'])
+                                            . "','" . password_hash(($fields['password']), PASSWORD_DEFAULT)
+                                            . "','" . mysqli_real_escape_string($con, $fields['message'])
                                             . "')";
                 $result = mysqli_query($con, $sql);
                 if ($result) {
-                    toMain($id_item);
+                    toMain();
                 }
             }
         }

@@ -1,5 +1,6 @@
 <?php
 
+require_once "login_check.php";
 include_once "helpers.php";
 
 $id_item = 0;
@@ -12,8 +13,6 @@ else{
     to404();
 }
 
-$is_auth = rand(0, 1);
-$user_name = 'Dmitry'; // укажите здесь ваше имя
 $categories = [];
 $bets = [];
 $item = [];
