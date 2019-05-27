@@ -3,12 +3,14 @@
 require_once "login_check.php";
 include_once "helpers.php";
 
-$is_auth = 0;
-$user_name = '';
-
 if (isset($_SESSION["is_auth"])) {
     $is_auth = $_SESSION["is_auth"];
     $user_name = $_SESSION["user_name"];
+}
+
+if (!$is_auth) {
+    header("HTTP/1.1 403 Доступно только зарегистрированным пользователям");
+    exit();
 }
 
 $categories = [];

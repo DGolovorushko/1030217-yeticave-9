@@ -73,7 +73,8 @@ else{
 $data_lot = [
     'categories' => $categories,
     'item' => $item,
-    'bets' => $bets
+    'bets' => $bets,
+    'is_auth' => $is_auth
 ];
 
 $lot = include_template("lot.php", $data_lot);
